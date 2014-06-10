@@ -1,4 +1,7 @@
 GraphLabHackathon
 =================
 
-Repository for the Graphlab Hackathon
+Repository for the Graphlab Hackathon. 
+
+Project Idea:
+
