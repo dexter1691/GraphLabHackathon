@@ -4,9 +4,15 @@ import graphlab as gl
 import os
 import config as cfg
 import re
+import csv
 
-cvs_file = open('/home/dexter/workspace/GraphLabHackathon/abstract_data.csv', 'w')
-cvs_file.write('ID  Title   Abstract    Authors     Year    Email    Pages   Venue   EmailName\n')
+csv_file = open('/home/dexter/workspace/GraphLabHackathon/abstract_data.csv', 'wb')
+csv_writer = csv.writer(csv_file, delimiter='\t')
+
+header_list = ['ID', 'Title','Authors','Year','Abstract', 'Email','Pages','Venue',
+                'EmailName']
+csv_writer.writerow(header_list)
+
 
 def parse_content(content, year):
     id =  re.findall('Paper: h?H?ep-th/(.*)', content)
@@ -35,8 +41,9 @@ def parse_content(content, year):
         print content
         print '------------------------------------'
     '''
-
-    cvs_file.write(str(id[0])+'    '+title[0]+'    '+ (authors[0] if len(authors) > 0 else 'None' ) + '    ' + year + '    ' + '    ' + abstract[2] + '    ' + (email[0] if len(email)>0 else 'None')+'    '+(pages[0] if len(pages) > 0 else 'None') + '    '+(venue[0] if len(venue) >=1 else 'None') +'    ' + 'None\n')
+    row_content_list = [str(id[0]),title[0],(authors[0] if len(authors) > 0 else 'None' ), year,abstract[2],(email[0] if len(email)>0 else 'None'),(pages[0] if len(pages) > 0 else 'None'),(venue[0] if len(venue) >=1 else 'None'),'None']
+    #csv_file.write(str(id[0])+'    '+title[0]+'    '+ (authors[0] if len(authors) > 0 else 'None' ) + '    ' + year + '    ' + '    ' + abstract[2] + '    ' + (email[0] if len(email)>0 else 'None')+'    '+(pages[0] if len(pages) > 0 else 'None') + '    '+(venue[0] if len(venue) >=1 else 'None') +'    ' + 'None\n')
+    csv_writer.writerow(row_content_list)
 
 def iterateOverDirectory(dir):
     if os.path.exists(dir):
@@ -47,7 +54,7 @@ def iterateOverDirectory(dir):
                 for files in sorted(os.listdir(full_sub_path)):
                     content = open(str(os.path.join(full_sub_path, files)))
                     parse_content(content.read(), subpath)
-            break
+            
 
 iterateOverDirectory(cfg.abs_dir)
-cvs_file.close()
+csv_file.close()
